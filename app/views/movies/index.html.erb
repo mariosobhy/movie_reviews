@@ -13,7 +13,7 @@
         <th>Description</th>
         <th>Year</th>
         <th>Director</th>
-        <th>Actor</th>
+        <th>Actors</th>
         <th>Filming Location</th>
         <th>Country</th>
         <th>Average Stars</th>
@@ -26,7 +26,11 @@
           <td><%= movie.description %></td>
           <td><%= movie.year %></td>
           <td><%= movie.director %></td>
-          <td><%= movie.actor %></td>
+          <td>
+            <% movie.actors.each do |actor| %>
+              <%= actor.name %><br>
+            <% end %>
+          </td>
           <td><%= movie.filming_location %></td>
           <td><%= movie.country %></td>
           <td><%= movie.reviews.average(:stars).to_f.round(2) if movie.reviews.any? %></td>

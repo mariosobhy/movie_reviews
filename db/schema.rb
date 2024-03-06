@@ -10,9 +10,22 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_03_06_214146) do
+ActiveRecord::Schema[7.0].define(version: 2024_03_06_222915) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "actors", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "movie_actors", force: :cascade do |t|
+    t.bigint "movie_id", null: false
+    t.bigint "actor_id", null: false
+    t.index ["actor_id"], name: "index_movie_actors_on_actor_id"
+    t.index ["movie_id"], name: "index_movie_actors_on_movie_id"
+  end
 
   create_table "movies", force: :cascade do |t|
     t.string "title"
@@ -24,6 +37,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_03_06_214146) do
     t.string "country"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.decimal "average_rating", precision: 5, scale: 2
     t.index ["actor"], name: "index_movies_on_actor"
     t.index ["title"], name: "index_movies_on_title"
   end
@@ -40,5 +54,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_03_06_214146) do
     t.index ["user"], name: "index_reviews_on_user"
   end
 
+  add_foreign_key "movie_actors", "actors"
+  add_foreign_key "movie_actors", "movies"
   add_foreign_key "reviews", "movies"
 end
