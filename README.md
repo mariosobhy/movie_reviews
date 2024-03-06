@@ -38,12 +38,7 @@ Follow these steps to set up and run the application locally:
    rails server
    ```
 
-6. **Run the Specs**:
-   ```bash
-   bundle exec rspec
-   ```
-
-7. **Access the Application**:
+6. **Access the Application**:
    Visit `http://localhost:3000` in your web browser to access the application.
 
 ## Usage
