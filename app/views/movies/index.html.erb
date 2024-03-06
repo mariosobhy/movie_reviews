@@ -35,15 +35,8 @@
           </td>
           <td>
             <ul>
-              <% movie.movie_locations.each do |movie_location| %>
-                <li><%= movie_location.location.filming_location %></li>
-              <% end %>
-            </ul>
-          </td>
-          <td>
-            <ul>
-              <% movie.movie_locations.each do |movie_location| %>
-                <li><%= movie_location.location.country %></li>
+              <% movie.locations.each do |location| %>
+                <li><%= "#{location.filming_location}, #{location.country}" %></li>
               <% end %>
             </ul>
           </td>
