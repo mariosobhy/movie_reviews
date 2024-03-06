@@ -20,9 +20,7 @@ namespace :import do
     CSV.foreach("#{Rails.root}/csv/movies.csv", headers: true) do |row|
       movie_title = row['Movie']
       movie = Movie.find_by(title: movie_title)
-      actor_name = row['Actor']
-      actor = Actor.find_by(name: actor_name)
-
+    
       unless movie.present?
         movie = Movie.create!(
           title: row['Movie'],
@@ -32,9 +30,13 @@ namespace :import do
           country: row['Country']
         )
       end
+    
+      actor_name = row['Actor']
+      actor = Actor.find_or_create_by(name: actor_name)
+    
       movie.actors << actor unless movie.actors.include?(actor)
     end
-
+    
     # Import movies and associate locations
     CSV.foreach("#{Rails.root}/csv/movies.csv", headers: true) do |row|
       movie_title = row['Movie']
