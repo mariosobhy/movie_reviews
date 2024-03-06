@@ -5,33 +5,28 @@ namespace :import do
   task movies_and_reviews: :environment do
     # Import actors
     CSV.foreach("#{Rails.root}/csv/movies.csv", headers: true) do |row|
-      actor_names = row['Actor'].split(',').map(&:strip)
-      actor_names.each do |actor_name|
-        Actor.find_or_create_by(name: actor_name)
-      end
+      actor_name = row['Actor']
+      Actor.find_or_create_by(name: actor_name)
     end
 
     # Import movies and associate actors
     CSV.foreach("#{Rails.root}/csv/movies.csv", headers: true) do |row|
       movie_title = row['Movie']
       movie = Movie.find_by(title: movie_title)
-      next if movie # Skip if movie already imported
+      actor_name = row['Actor']
+      actor = Actor.find_by(name: actor_name)
 
-      movie = Movie.create!(
-        title: row['Movie'],
-        description: row['Description'],
-        year: row['Year'],
-        director: row['Director'],
-        filming_location: row['Filming location'],
-        country: row['Country']
-      )
-
-      # Associate actors with the movie
-      actor_names = row['Actor'].split(',').map(&:strip)
-      actor_names.each do |actor_name|
-        actor = Actor.find_by(name: actor_name)
-        movie.actors << actor unless movie.actors.include?(actor)
+      unless movie.present?
+        movie = Movie.create!(
+          title: row['Movie'],
+          description: row['Description'],
+          year: row['Year'],
+          director: row['Director'],
+          filming_location: row['Filming location'],
+          country: row['Country']
+        )
       end
+      movie.actors << actor unless movie.actors.include?(actor)
     end
 
     # Import reviews
@@ -45,6 +40,9 @@ namespace :import do
         stars: row['Stars'],
         review: row['Review']
       )
+
+      average_rating = movie.reviews.average(:stars).to_f.round(2)
+      movie.update(average_rating: average_rating)
     end
 
     puts "Import completed!"

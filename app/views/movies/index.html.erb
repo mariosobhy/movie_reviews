@@ -27,13 +27,15 @@
           <td><%= movie.year %></td>
           <td><%= movie.director %></td>
           <td>
-            <% movie.actors.each do |actor| %>
-              <%= actor.name %><br>
-            <% end %>
+            <ul>
+              <% movie.actors.each do |actor| %>
+                <li><%= actor.name %></li>
+              <% end %>
+            </ul>
           </td>
           <td><%= movie.filming_location %></td>
           <td><%= movie.country %></td>
-          <td><%= movie.reviews.average(:stars).to_f.round(2) if movie.reviews.any? %></td>
+          <td><%= movie.average_rating %></td>
         </tr>
       <% end %>
     </tbody>
