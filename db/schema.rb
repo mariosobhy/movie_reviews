@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_03_06_224053) do
+ActiveRecord::Schema[7.0].define(version: 2024_03_06_231541) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -20,11 +20,27 @@ ActiveRecord::Schema[7.0].define(version: 2024_03_06_224053) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "locations", force: :cascade do |t|
+    t.string "filming_location"
+    t.string "country"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "movie_actors", force: :cascade do |t|
     t.bigint "movie_id", null: false
     t.bigint "actor_id", null: false
     t.index ["actor_id"], name: "index_movie_actors_on_actor_id"
     t.index ["movie_id"], name: "index_movie_actors_on_movie_id"
+  end
+
+  create_table "movie_locations", force: :cascade do |t|
+    t.bigint "movie_id", null: false
+    t.bigint "location_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["location_id"], name: "index_movie_locations_on_location_id"
+    t.index ["movie_id"], name: "index_movie_locations_on_movie_id"
   end
 
   create_table "movies", force: :cascade do |t|
@@ -56,5 +72,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_03_06_224053) do
 
   add_foreign_key "movie_actors", "actors"
   add_foreign_key "movie_actors", "movies"
+  add_foreign_key "movie_locations", "locations"
+  add_foreign_key "movie_locations", "movies"
   add_foreign_key "reviews", "movies"
 end
