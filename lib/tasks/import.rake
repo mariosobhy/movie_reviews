@@ -9,6 +9,13 @@ namespace :import do
       Actor.find_or_create_by(name: actor_name)
     end
 
+    # Import locations
+    CSV.foreach("#{Rails.root}/csv/movies.csv", headers: true) do |row|
+      location_name = row['Filming location']
+      country = row['Country']
+      Location.find_or_create_by(filming_location: location_name, country: country)
+    end
+
     # Import movies and associate actors
     CSV.foreach("#{Rails.root}/csv/movies.csv", headers: true) do |row|
       movie_title = row['Movie']
@@ -22,11 +29,20 @@ namespace :import do
           description: row['Description'],
           year: row['Year'],
           director: row['Director'],
-          filming_location: row['Filming location'],
           country: row['Country']
         )
       end
       movie.actors << actor unless movie.actors.include?(actor)
+    end
+
+    # Import movies and associate locations
+    CSV.foreach("#{Rails.root}/csv/movies.csv", headers: true) do |row|
+      movie_title = row['Movie']
+      movie = Movie.find_by(title: movie_title)
+      location_name = row['Filming location']
+      location = Location.find_by(filming_location: location_name)
+
+      movie.locations << location unless movie.locations.include?(location)
     end
 
     # Import reviews
