@@ -26,8 +26,7 @@ namespace :import do
           title: row['Movie'],
           description: row['Description'],
           year: row['Year'],
-          director: row['Director'],
-          country: row['Country']
+          director: row['Director']
         )
       end
     
